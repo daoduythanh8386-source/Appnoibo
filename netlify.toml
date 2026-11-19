@@ -1,6 +1,11 @@
 [build]
-  command = "npm install && node scripts/build.mjs"
+  command = "npm install --omit=dev --ignore-scripts --no-audit --no-fund && node scripts/build.mjs"
   publish = "www"
+
+[build.environment]
+  NODE_VERSION = "20"
+  # Khoá anon của Supabase là khoá công khai theo thiết kế, không phải bí mật.
+  SECRETS_SCAN_OMIT_KEYS = "SUPABASE_URL,SUPABASE_ANON_KEY"
 
 [[headers]]
   for = "/*"

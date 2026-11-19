@@ -2,11 +2,17 @@
    Cung cấp window.claude.use('db'|'user'|'downloads'|'assets'|'mcp') với cùng giao diện mà mã ứng dụng đang dùng. */
 (function(){
 'use strict';
-const cfg=window.ORI_CONFIG||{};
+let cfg=window.ORI_CONFIG||{};
+if(!cfg.url||!cfg.key){try{const sv=JSON.parse(localStorage.getItem('ORI_CFG')||'null');if(sv&&sv.url&&sv.key)cfg=sv}catch(e){}}
 const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 if(!window.supabase||!cfg.url||!cfg.key){
   window.claude={use:async()=>null};
-  window.addEventListener('DOMContentLoaded',()=>{const a=document.getElementById('app');if(a)a.innerHTML='<div style="padding:24px;font-family:sans-serif">Chưa cấu hình kết nối. Hãy đặt SUPABASE_URL và SUPABASE_ANON_KEY khi build (xem README).</div>'});
+  window.addEventListener('DOMContentLoaded',()=>{const a=document.getElementById('app');if(!a)return;
+    a.innerHTML='<div style="max-width:440px;margin:8vh auto;padding:24px;font-family:sans-serif;display:grid;gap:10px"><h2 style="margin:0">Kết nối Supabase</h2><p style="margin:0;color:#555;font-size:.92rem">Bản build này chưa có biến SUPABASE_URL / SUPABASE_ANON_KEY. Dán thông tin dự án Supabase (Project Settings → API) vào đây một lần; thiết bị sẽ ghi nhớ. Hoặc đặt 2 biến này trong Netlify rồi build lại.</p><input id="cfu" placeholder="https://xxxx.supabase.co" style="padding:10px;font-size:1rem"><input id="cfk" placeholder="anon public key" style="padding:10px;font-size:1rem"><button id="cfb" style="padding:12px;font-size:1rem;font-weight:700">Lưu và mở ứng dụng</button><div id="cfm" style="color:#b00020;min-height:1.2em"></div></div>';
+    document.getElementById('cfb').onclick=()=>{const u=document.getElementById('cfu').value.trim().replace(/\/+$/,''),k=document.getElementById('cfk').value.trim();
+      if(!/^https:\/\/[a-z0-9-]+\.supabase\.(co|in)$/i.test(u)||k.length<30){document.getElementById('cfm').textContent='URL hoặc khoá chưa đúng định dạng.';return}
+      try{localStorage.setItem('ORI_CFG',JSON.stringify({url:u,key:k}))}catch(e){document.getElementById('cfm').textContent='Không lưu được trên trình duyệt này.';return}
+      location.reload()}});
   return}
 const sb=window.supabase.createClient(cfg.url,cfg.key,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:false}});
 let me=null,prof=null;

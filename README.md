@@ -46,3 +46,14 @@ Trong GitHub: tab **Actions** > chọn quy trình > **Run workflow**. Kết qu�
 - Tính năng đồng bộ Google Sheets chỉ có trong bản chạy trong Claude; bản này dùng nhập/xuất Excel và CSV.
 - Khóa PIN màn hình lưu trên từng thiết bị, chỉ là lớp ngăn người ngoài xem lén.
 - Kho tối đa 1000 bản ghi mỗi bộ sưu tập khi tải; nếu vượt (hơn 1000 vật tư hay giao dịch kho) cần bổ sung phân trang.
+
+## Khắc phục lỗi thường gặp khi deploy Netlify
+
+- **"Không tìm thấy thư mục đầu ra" (Publish directory not found):** `netlify.toml` phải nằm ở thư mục gốc của repo (cùng cấp với `package.json`), không nằm trong thư mục con. Khi push lên GitHub, hãy push *nội dung* bên trong thư mục `oristar`, không push thư mục cha. Trong Netlify: Build command = `npm install --omit=dev --ignore-scripts && node scripts/build.mjs`, Publish directory = `www`, Base directory để trống.
+- **Cảnh báo thiếu SUPABASE_URL / SUPABASE_ANON_KEY:** đặt 2 biến này ở Site configuration → Environment variables rồi Deploy lại. Nếu chưa đặt, ứng dụng vẫn build và sẽ hiện màn hình nhập URL + khoá Supabase ở lần mở đầu tiên.
+
+## Triển khai trên Vercel
+
+1. Import repo vào Vercel. **Root Directory phải là thư mục chứa `package.json` và `vercel.json`** (nếu bạn push thư mục `oristar/` lồng bên trong repo, hãy đặt Root Directory = `oristar`). Framework Preset: *Other*.
+2. `vercel.json` đã đặt sẵn: Install `npm install --omit=dev --ignore-scripts`, Build `node scripts/build.mjs`, Output Directory `www`.
+3. Settings → Environment Variables: thêm `SUPABASE_URL` và `SUPABASE_ANON_KEY` (tick Production + Preview), rồi Redeploy. (Cũng nhận `NEXT_PUBLIC_SUPABASE_URL` / `NEXT_PUBLIC_SUPABASE_ANON_KEY`.) Thiếu biến chỉ là thông báo, app vẫn build và sẽ hiện màn hình nhập kết nối ở lần mở đầu.

@@ -7,9 +7,11 @@ import { fileURLToPath } from 'node:url';
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const src = (f) => path.join(root, 'src', f);
 const out = path.join(root, 'www');
-const url = process.env.SUPABASE_URL || '';
-const key = process.env.SUPABASE_ANON_KEY || '';
-if (!url || !key) console.warn('CẢNH BÁO: thiếu SUPABASE_URL hoặc SUPABASE_ANON_KEY. Ứng dụng sẽ báo chưa cấu hình.');
+const E = process.env;
+const url = E.SUPABASE_URL || E.NEXT_PUBLIC_SUPABASE_URL || E.VITE_SUPABASE_URL || '';
+const key = E.SUPABASE_ANON_KEY || E.NEXT_PUBLIC_SUPABASE_ANON_KEY || E.VITE_SUPABASE_ANON_KEY || E.SUPABASE_KEY || '';
+// Thiếu biến chỉ là thông báo, KHÔNG làm build thất bại: app sẽ hiện màn hình nhập kết nối Supabase ở lần mở đầu.
+if (!url || !key) console.log('Thông báo: chưa đặt SUPABASE_URL / SUPABASE_ANON_KEY (Vercel: Settings → Environment Variables, tick Production + Preview, rồi Redeploy). Build vẫn tiếp tục.');
 
 fs.rmSync(out, { recursive: true, force: true });
 fs.mkdirSync(path.join(out, 'vendor'), { recursive: true });
