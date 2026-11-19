@@ -5,7 +5,7 @@
 let cfg=window.ORI_CONFIG||{};
 if(!cfg.url||!cfg.key){try{const sv=JSON.parse(localStorage.getItem('ORI_CFG')||'null');if(sv&&sv.url&&sv.key)cfg=sv}catch(e){}}
 const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-if(!window.supabase||!cfg.url||!cfg.key){
+if(!(window.supabase&&window.supabase.createClient)||!cfg.url||!cfg.key){
   window.claude={use:async()=>null};
   window.addEventListener('DOMContentLoaded',()=>{const a=document.getElementById('app');if(!a)return;
     a.innerHTML='<div style="max-width:440px;margin:8vh auto;padding:24px;font-family:sans-serif;display:grid;gap:10px"><h2 style="margin:0">Kết nối Supabase</h2><p style="margin:0;color:#555;font-size:.92rem">Bản build này chưa có biến SUPABASE_URL / SUPABASE_ANON_KEY. Dán thông tin dự án Supabase (Project Settings → API) vào đây một lần; thiết bị sẽ ghi nhớ. Cách làm một lần cho tất cả thiết bị: đặt 2 biến SUPABASE_URL và SUPABASE_ANON_KEY trong Vercel (Settings → Environment Variables, tick Production) hoặc Netlify rồi Redeploy.</p><input id="cfu" placeholder="https://xxxx.supabase.co" style="padding:10px;font-size:1rem"><input id="cfk" placeholder="anon public key" style="padding:10px;font-size:1rem"><button id="cfb" style="padding:12px;font-size:1rem;font-weight:700">Lưu và mở ứng dụng</button><div id="cfm" style="color:#b00020;min-height:1.2em"></div></div>';

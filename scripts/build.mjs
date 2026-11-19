@@ -44,5 +44,6 @@ let body = '';
 for (const f of ['b1-core.js', 'b2-data.js', 'c-pages.js', 'c2-extra.js', 'd-app.js']) body += fs.readFileSync(src(f), 'utf8') + '\n';
 if (!/<\/script>\s*$/.test(body)) body += '</script>\n';
 if (!/<script>\n/.test(head.slice(-20))) throw new Error('Không tìm thấy thẻ <script> mở ở cuối a-head.html');
+head = head.replace(/^\s*(<!doctype[^>]*>)?\s*/i, '<!doctype html>\n<html lang="vi">\n<head>\n<meta charset="utf-8">\n');
 fs.writeFileSync(path.join(out, 'index.html'), head + body + '</body>\n</html>\n');
 console.log('Đã tạo www/index.html');
