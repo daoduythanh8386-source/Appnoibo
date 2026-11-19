@@ -1,0 +1,46 @@
+{
+  "name": "oristar-noi-bo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "ORISTAR - Quản trị nội bộ nhà máy",
+  "main": "electron/main.js",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "electron": "npm run build && electron .",
+    "dist:win": "npm run build && electron-builder --win --publish never"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "2.45.4",
+    "xlsx": "0.18.5",
+    "jsqr": "1.4.0",
+    "qrcode-generator": "1.4.4"
+  },
+  "devDependencies": {
+    "@capacitor/android": "^6.1.2",
+    "@capacitor/cli": "^6.1.2",
+    "@capacitor/core": "^6.1.2",
+    "@capacitor/ios": "^6.1.2",
+    "electron": "^31.3.1",
+    "electron-builder": "^24.13.3"
+  },
+  "build": {
+    "appId": "vn.oristar.noibo",
+    "productName": "ORISTAR",
+    "files": [
+      "electron/**",
+      "www/**",
+      "package.json"
+    ],
+    "directories": {
+      "output": "dist"
+    },
+    "win": {
+      "target": "nsis",
+      "icon": "resources/icon.png"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    }
+  }
+}

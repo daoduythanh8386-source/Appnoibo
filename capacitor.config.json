@@ -1,0 +1,8 @@
+{
+  "appId": "vn.oristar.noibo",
+  "appName": "ORISTAR",
+  "webDir": "www",
+  "server": {
+    "androidScheme": "https"
+  }
+}
